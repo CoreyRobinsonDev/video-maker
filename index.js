@@ -15,11 +15,11 @@ const main = async () => {
   spinner.color = "orange";
 
   // grabs stories from reddit and saves them in the stories.json file
-  // getStories(subreddit);
+  getStories(subreddit);
   
-  // await getTTS();
+  await getTTS();
 
-  // elements truly randomly exists or not
+  // elements truly randomly exist or not
   // if this function crashes, retry 
   try {
     await makeVideo();  
@@ -27,7 +27,7 @@ const main = async () => {
     await makeVideo();  
   }
   
-  spinner.succeed("Done!");
+  spinner.succeed(`\nvideo-${storyNum} is located in: ${folder}\\story-${storyNum}\nsome trash may still be in your Downloads folder`);
   process.exit(0);
 }
 
@@ -74,7 +74,7 @@ fs.watch(folder, (eventType = "rename", filename) => {
       const newDir = `${folder}\\story-${storyNum}\\${audioName}`;
 
       fs.move(`${folder}/${filename}`, newDir, err => {
-        if (err) return console.error(err)
+        if (err) return console.error(err);
       })
 
       count = 0;
@@ -86,6 +86,13 @@ fs.watch(folder, (eventType = "rename", filename) => {
     } else {
       count++;
     }
+  }
+
+  // moves the mp4 to the right folder
+  if (fileData.ext === ".mp4") {
+    fs.move(`${folder}/${filename}`, `${folder}\\story-${storyNum}\\video-${storyNum}.mp4`, err => {
+      // this would throw an error but still works
+    })
   }
 })  
 
